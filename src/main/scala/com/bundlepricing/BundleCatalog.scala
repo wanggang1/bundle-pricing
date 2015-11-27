@@ -8,8 +8,7 @@ package com.bundlepricing
 
 object BundleCatalog {
 
-  //TODO type parameter???
-  private val single = (items: List[Item]) => {
+  private val unitPrice = (items: List[Item]) => {
     require(items.size == 1)
     items.head.price
   }
@@ -24,55 +23,42 @@ object BundleCatalog {
     items.head.price + items.last.price / 2
   }
   
-  private val buy2GetTheOtherHalf = (items: List[Item]) => {
+  private val buy2Get3rdHalf = (items: List[Item]) => {
     require(items.size == 3)
     items(0).price + items(1).price + items(2).price / 2
   }
   
-  private val buy3GetTheOtherFree = (items: List[Item]) => {
+  private val buy3Get4thFree = (items: List[Item]) => {
     require(items.size == 4)
     items.dropRight(1).map(_.price).foldLeft(0.0)(_ + _)
   }
   
-  val appleSingle = Bundle(List(Apple), single)
-  val milkSingle = Bundle(List(Milk), single)
-  val breadSingle = Bundle(List(Bread), single)
-  val cerealSingle = Bundle(List(Cereal), single)
-  val cheeseSingle = Bundle(List(SlicedCheese), single)
-  val peanutbutterSingle = Bundle(List(PeanutButter), single)
+  val allBundles = List(
+    Bundle(List(Apple), unitPrice),
+    Bundle(List(Apple, Apple, Apple, Apple), buy3Get4thFree),
+    Bundle(List(Apple, Apple, PeanutButter), buy2Get3rdHalf),
+    Bundle(List(Bread), unitPrice),
+    Bundle(List(Bread, Bread), buy1Get1Free),
+    Bundle(List(Bread, Bread, PeanutButter), buy2Get3rdHalf),
+    Bundle(List(Cereal), unitPrice),
+    Bundle(List(Cereal, Cereal, Cereal), buy2Get3rdHalf),
+    Bundle(List(Cereal, Cereal, Cereal, Milk), buy3Get4thFree),
+    Bundle(List(Milk), unitPrice),
+    Bundle(List(Milk, Milk), buy1Get1Free),
+    Bundle(List(Milk, Milk, SlicedCheese), buy2Get3rdHalf),
+    Bundle(List(PeanutButter), unitPrice),
+    Bundle(List(PeanutButter, PeanutButter), buy1Get2ndHalf),
+    Bundle(List(SlicedCheese), unitPrice),
+    Bundle(List(SlicedCheese, SlicedCheese), buy1Get2ndHalf)
+  )
   
-  val appleBuy3Get1Free = Bundle(List(Apple, Apple, Apple, Apple), buy3GetTheOtherFree)
-  val appleBuy2GetPBHalf = Bundle(List(Apple, Apple, PeanutButter), buy2GetTheOtherHalf)
+  val bundlePrices: Map[String, Double] = {
+    val pairs = for {
+      bundle <- allBundles 
+      keyPermutation <- bundle.keys
+    } yield (keyPermutation -> bundle.price)
+    
+    pairs.toMap
+  }
   
-  val milkBuy1Get1Free = Bundle(List(Milk, Milk), buy1Get1Free)
-  val milkBuy2Get1CheeseHalf = Bundle(List(Milk, Milk, SlicedCheese), buy2GetTheOtherHalf)
-  
-  val breadBuy1Get1Free = Bundle(List(Bread, Bread), buy1Get1Free)
-  
-  val chessBuy1Get2ndHalf = Bundle(List(SlicedCheese, SlicedCheese), buy1Get2ndHalf)
-  
-  val pbBuy1Get2ndHalf = Bundle(List(PeanutButter, PeanutButter), buy1Get2ndHalf)
-  
-  val cerealBuy2Get3rdHalf = Bundle(List(Cereal, Cereal, Cereal), buy2GetTheOtherHalf)
-  val cerealBuy3GetMilkFree = Bundle(List(Cereal, Cereal, Cereal, Milk), buy3GetTheOtherFree)
-  
-  val bundles: Map[String, Double] =
-    Map(
-      appleSingle.name -> appleSingle.price,
-      milkSingle.name -> milkSingle.price,
-      breadSingle.name -> breadSingle.price,
-      cerealSingle.name -> cerealSingle.price,
-      cheeseSingle.name -> cheeseSingle.price,
-      peanutbutterSingle.name -> peanutbutterSingle.price,
-      appleBuy3Get1Free.name -> appleBuy3Get1Free.price,
-      appleBuy2GetPBHalf.name -> appleBuy2GetPBHalf.price,
-      milkBuy1Get1Free.name -> milkBuy1Get1Free.price,
-      milkBuy2Get1CheeseHalf.name -> milkBuy2Get1CheeseHalf.price,
-      breadBuy1Get1Free.name -> breadBuy1Get1Free.price,
-      chessBuy1Get2ndHalf.name -> chessBuy1Get2ndHalf.price,
-      pbBuy1Get2ndHalf.name -> pbBuy1Get2ndHalf.price,
-      cerealBuy2Get3rdHalf.name -> cerealBuy2Get3rdHalf.price,
-      cerealBuy3GetMilkFree.name -> cerealBuy3GetMilkFree.price
-    )
-
 }

@@ -21,12 +21,12 @@ case object Cereal extends Item {
 }
 
 case object SlicedCheese extends Item {
-  val name: String = "SlicedCheese"
+  val name: String = "Slicedcheese"
    val price: Double = 4.50
 }
 
 case object PeanutButter extends Item {
-  val name: String = "PeanutButter"
+  val name: String = "Peanutbutter"
    val price: Double = 2.50
 }
 
